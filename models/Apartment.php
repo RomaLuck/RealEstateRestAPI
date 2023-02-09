@@ -90,6 +90,61 @@ class Apartment{
         }
 
     }
+
+    public function update()
+    {
+        $query = "UPDATE ".$this->table." 
+        SET
+        category_id=:category_id,
+        rooms=:rooms,
+        floor=:floor,
+        max_floor=:max_floor,
+        street=:street,
+        city=:city,
+        heating=:heating,
+        furniture=:furniture,
+        appliances=:appliances,
+        square=:square,
+        conditions=:conditions 
+        WHERE 
+        id=:id";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':category_id',$this->category_id);
+        $stmt->bindParam(':rooms',$this->rooms);
+        $stmt->bindParam(':floor',$this->floor);
+        $stmt->bindParam(':max_floor',$this->max_floor);
+        $stmt->bindParam(':street',$this->street);
+        $stmt->bindParam(':city',$this->city);
+        $stmt->bindParam(':heating',$this->heating);
+        $stmt->bindParam(':furniture',$this->furniture);
+        $stmt->bindParam(':appliances',$this->appliances);
+        $stmt->bindParam(':square',$this->square);
+        $stmt->bindParam(':conditions',$this->conditions);
+        $stmt->bindParam(':id',$this->id);
+
+        if($stmt->execute()){
+            return true;
+        }else{
+            printf("Error: %s.\n",$stmt->error);
+            return false;
+        }
+
+    }
+
+    public function delete()
+    {
+        $query = "DELETE FROM ".$this->table." 
+        WHERE id=:id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id',$this->id);
+        if($stmt->execute()){
+            return true;
+        }else{
+            printf("Error: %s.\n",$stmt->error);
+            return false;
+        }
+    }
 }
 
 // $database = new Database;
