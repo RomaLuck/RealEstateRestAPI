@@ -46,7 +46,7 @@ class Apartment{
         $query = "SELECT * FROM ".$this->table." 
         LEFT JOIN 
         categories ON apartment.category_id=categories.id
-        WHERE apartment.category_id=? LIMIT 0,1";
+        WHERE apartment.id=? LIMIT 0,1";
 
         $stmt = $this->conn->prepare($query);
         $stmt->execute([$id]);

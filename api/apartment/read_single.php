@@ -14,7 +14,10 @@ $db = $database->connect();
 $appartment  = new Apartment($db);
 
 //query
-$id = isset($_GET['id'])?$_GET['id']:die();
+$uri = parse_url($_SERVER['REQUEST_URI'])['path'];
+$pattern='~^\/real_estate\/api\/apartment\/(\d+)(.*)$~';
+preg_match($pattern,$uri,$matches);
+$id = intval($matches[1]);
 $result = $appartment->read_single($id);
 
 //check if any apartment

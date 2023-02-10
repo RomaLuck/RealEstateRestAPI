@@ -16,8 +16,12 @@ $db = $database->connect();
 $appartment  = new Apartment($db);
 
 $data = json_decode(file_get_contents("php://input"));
+$uri = parse_url($_SERVER['REQUEST_URI'])['path'];
+$pattern='~^\/real_estate\/api\/apartment\/(\d+)(.*)$~';
+preg_match($pattern,$uri,$matches);
+$id = intval($matches[1]);
 
-$appartment->id = $data->id ?? null;
+$appartment->id = $id ?? null;
 $appartment->category_id = $data->category_id ?? null;
 $appartment->rooms = $data->rooms ?? null;
 $appartment->floor = $data->floor ?? null;
