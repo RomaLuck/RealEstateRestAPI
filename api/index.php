@@ -1,29 +1,26 @@
 <?php
 
-$uri = parse_url($_SERVER['REQUEST_URI'])['path'];
+require_once __DIR__."/../config/Database.php";
+require_once __DIR__."/controllers/ApartmantController.php";
+require_once __DIR__."/models/Apartment.php";
+require_once __DIR__."/../config/ErrorHandler.php";
 
-$routes = [
-    '~^\/real_estate\/api\/apartment\/create$~'=>"apartment/create.php",
-    '~^\/real_estate\/api\/apartment\/(\d+)\/delete$~'=>"apartment/delete.php",
-    '~^\/real_estate\/api\/apartment\/(\d+)$~'=>"apartment/read_single.php",
-    '~^\/real_estate\/api\/apartment\/$~'=>"apartment/read.php",
-    '~^\/real_estate\/api\/apartment\/(\d+)\/update$~'=>"apartment/update.php"
-];
+set_error_handler("ErrorHandler::handleError");
+set_exception_handler("ErrorHandler::handleException");
 
-function route_to_controller($uri,$routes)
-{
-    foreach($routes as $key=>$value){
-        if(preg_match($key,$uri)){
-            require_once $value;
-        }
-    }
+header("Content-type: application/json; charset=UTF-8");
+
+$parts = explode("/", $_SERVER["REQUEST_URI"]);
+
+if ($parts[3] != "apartment") {
+    http_response_code(404);
+    exit;
 }
 
-function abort($code = 404)
-{
-    http_response_code($code);
-    echo json_encode("Page not found");
-    die();
-}
+$id = $parts[4] ?? null;
 
-route_to_controller($uri,$routes);
+$database = new Database;
+$db = $database->connect();
+$apartment = new Apartment($db);
+$controller = new ApartmentController($apartment);
+$controller->request($_SERVER["REQUEST_METHOD"], $id);
