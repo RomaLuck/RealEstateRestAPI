@@ -1,9 +1,13 @@
 <?php
 
-require_once __DIR__."/../config/Database.php";
-require_once __DIR__."/controllers/ApartmantController.php";
-require_once __DIR__."/models/Apartment.php";
+use real_estate\config\Database;
+use real_estate\api\models\Apartment;
+use real_estate\api\controllers\ApartmentController;
+
+require_once __DIR__."/../vendor/autoload.php";
 require_once __DIR__."/../config/ErrorHandler.php";
+
+
 
 set_error_handler("ErrorHandler::handleError");
 set_exception_handler("ErrorHandler::handleException");
@@ -19,7 +23,7 @@ if ($parts[3] != "apartment") {
 
 $id = $parts[4] ?? null;
 
-$database = new Database;
+$database = new Database();
 $db = $database->connect();
 $apartment = new Apartment($db);
 $controller = new ApartmentController($apartment);

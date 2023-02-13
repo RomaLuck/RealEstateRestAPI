@@ -1,6 +1,9 @@
 <?php
+namespace real_estate\api\controllers;
 
-require_once __DIR__."/../models/Apartment.php";
+use real_estate\api\models\Apartment;
+
+require_once __DIR__."/../../vendor/autoload.php";
 
 class ApartmentController
 {

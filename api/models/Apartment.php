@@ -1,4 +1,7 @@
 <?php
+namespace real_estate\api\models;
+
+use PDO;
 
 require_once __DIR__ . "/../../config/Database.php";
 
@@ -33,7 +36,7 @@ class Apartment
     {
         $query = "SELECT * FROM " . $this->table . " 
         LEFT JOIN 
-        categories ON apartment.category_id=categories.id
+        categories ON apartment.category_id=categories.category_id
         ORDER BY 
         apartment.created_at DESC";
 
@@ -50,8 +53,8 @@ class Apartment
     {
         $query = "SELECT * FROM " . $this->table . " 
         LEFT JOIN 
-        categories ON apartment.category_id=categories.id
-        WHERE apartment.id=:id LIMIT 0,1";
+        categories ON apartment.category_id=categories.category_id
+        WHERE apartment.id=:id LIMIT 1";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(":id", $id);
@@ -116,18 +119,18 @@ class Apartment
         id=:id";
 
         $stmt = $this->conn->prepare($query);
-        $stmt->bindValue(':category_id', $new['category_id'] ?? $current['category_id']);
-        $stmt->bindValue(':rooms', $new['rooms'] ?? $current['rooms']);
-        $stmt->bindValue(':floor', $new['floor'] ?? $current['floor']);
-        $stmt->bindValue(':max_floor', $new['max_floor'] ?? $current['max_floor']);
-        $stmt->bindValue(':street', $new['street'] ?? $current['street']);
-        $stmt->bindValue(':city', $new['city'] ?? $current['city']);
-        $stmt->bindValue(':heating', $new['heating'] ?? $current['heating']);
-        $stmt->bindValue(':furniture', $new['furniture'] ?? $current['furniture']);
-        $stmt->bindValue(':appliances', $new['appliances'] ?? $current['appliances']);
-        $stmt->bindValue(':square', $new['square'] ?? $current['square']);
-        $stmt->bindValue(':conditions', $new['conditions'] ?? $current['conditions']);
-        $stmt->bindValue(':id', $current['id']);
+        $stmt->bindValue(':category_id', $new['category_id'] ?? $current['category_id'],PDO::PARAM_INT);
+        $stmt->bindValue(':rooms', $new['rooms'] ?? $current['rooms'],PDO::PARAM_INT);
+        $stmt->bindValue(':floor', $new['floor'] ?? $current['floor'],PDO::PARAM_INT);
+        $stmt->bindValue(':max_floor', $new['max_floor'] ?? $current['max_floor'],PDO::PARAM_INT);
+        $stmt->bindValue(':street', $new['street'] ?? $current['street'],PDO::PARAM_STR);
+        $stmt->bindValue(':city', $new['city'] ?? $current['city'],PDO::PARAM_STR);
+        $stmt->bindValue(':heating', $new['heating'] ?? $current['heating'],PDO::PARAM_STR);
+        $stmt->bindValue(':furniture', $new['furniture'] ?? $current['furniture'],PDO::PARAM_BOOL);
+        $stmt->bindValue(':appliances', $new['appliances'] ?? $current['appliances'],PDO::PARAM_BOOL);
+        $stmt->bindValue(':square', $new['square'] ?? $current['square'],PDO::PARAM_INT);
+        $stmt->bindValue(':conditions', $new['conditions'] ?? $current['conditions'],PDO::PARAM_STR);
+        $stmt->bindValue(':id', $current['id'],PDO::PARAM_STR);
 
         if ($stmt->execute()) {
             return $stmt->rowCount();

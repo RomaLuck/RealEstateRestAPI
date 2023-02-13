@@ -1,4 +1,9 @@
 <?php
+namespace real_estate\config;
+
+use PDO;
+use PDOException;
+
 require_once __DIR__."/../config.php";
 
 class Database
